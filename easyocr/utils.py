@@ -628,7 +628,10 @@ def download_and_unzip(url, filename, model_storage_directory, verbose=True):
     urlretrieve(url, zip_path, reporthook=reporthook)
     with ZipFile(zip_path, 'r') as zipObj:
         zipObj.extract(filename, model_storage_directory)
-    os.remove(zip_path)
+    try:
+        os.remove(zip_path) 
+    except:
+        pass
 
 def calculate_md5(fname):
     hash_md5 = hashlib.md5()
