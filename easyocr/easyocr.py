@@ -33,7 +33,7 @@ class Reader(object):
                  user_network_directory=None, detect_network="craft", 
                  recog_network='standard', download_enabled=True, 
                  detector=True, recognizer=True, verbose=True, 
-                 quantize=True, cudnn_benchmark=False):
+                 quantize=True, cudnn_benchmark=False, thread_id=0):
         """Create an EasyOCR Reader
 
         Parameters:
@@ -53,6 +53,7 @@ class Reader(object):
         """
         self.verbose = verbose
         self.download_enabled = download_enabled
+        self.thread_id = thread_id
 
         self.model_storage_directory = MODULE_PATH + '/model'
         if model_storage_directory:
