@@ -623,23 +623,12 @@ def get_image_list(horizontal_list, free_list, img, model_height = 64, sort_outp
     return image_list, max_width
 
 def download_and_unzip(url, filename, model_storage_directory, verbose=True):
-    # Create a unique temporary file for each thread using tempfile
-    import tempfile
-    import shutil
-    
-    with tempfile.NamedTemporaryFile(suffix='.zip', delete=False) as temp_zip:
-        try:
-            reporthook = printProgressBar(prefix='Progress:', suffix='Complete', length=50) if verbose else None
-            urlretrieve(url, temp_zip.name, reporthook=reporthook)
-            
-            with ZipFile(temp_zip.name, 'r') as zipObj:
-                zipObj.extract(filename, model_storage_directory)
-        finally:
-            # Clean up the temporary file
-            try:
-                os.unlink(temp_zip.name)
-            except OSError:
-                pass
+    zip_path = os.path.join(model_storage_directory, 'temp.zip')
+    reporthook = printProgressBar(prefix='Progress:', suffix='Complete', length=50) if verbose else None
+    urlretrieve(url, zip_path, reporthook=reporthook)
+    with ZipFile(zip_path, 'r') as zipObj:
+        zipObj.extract(filename, model_storage_directory)
+    os.remove(zip_path) 
 
 def calculate_md5(fname):
     hash_md5 = hashlib.md5()
