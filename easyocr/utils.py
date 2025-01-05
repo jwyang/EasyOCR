@@ -626,12 +626,11 @@ def download_and_unzip(url, filename, model_storage_directory, verbose=True):
     zip_path = os.path.join(model_storage_directory, 'temp.zip')
     reporthook = printProgressBar(prefix='Progress:', suffix='Complete', length=50) if verbose else None
     urlretrieve(url, zip_path, reporthook=reporthook)
-    with ZipFile(zip_path, 'r') as zipObj:
-        zipObj.extract(filename, model_storage_directory)
-    try:
+    # only perform at the first thread process
+    if not os.path.exists(os.path.join(model_storage_directory, filename)):
+        with ZipFile(zip_path, 'r') as zipObj:
+            zipObj.extract(filename, model_storage_directory)
         os.remove(zip_path) 
-    except:
-        pass
 
 def calculate_md5(fname):
     hash_md5 = hashlib.md5()
